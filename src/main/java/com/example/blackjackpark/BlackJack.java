@@ -10,12 +10,7 @@ public class BlackJack {
     private int[][] deck= new int[4][13]; //clubs=0,diamonds=1,hearts=2,spades=3 columns;
     private Queue<Integer> playerQ = new LinkedList<>();
     private Queue<Integer> dealerQ = new LinkedList<>();
-
-
-    private int player_value=0;
-    private int dealer_valueTrue=0;
     private int dealer_valueHidden=0; //what the player sees
-    private static int amount_played=0;
     public BlackJack(){
         populateDeck();
     }
