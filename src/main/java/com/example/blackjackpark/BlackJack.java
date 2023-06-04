@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 public class BlackJack {
     private int[][] deck= new int[4][13]; //clubs=0,diamonds=1,hearts=2,spades=3 columns;
-    private int[] input_array=new int[4];
-    private int[] result_array= new int[2];
-    private int input_num=-1;
+    private int player_value=0;
+    private int dealer_valueTrue=0;
+    private int dealer_valueHidden=0; //what the player sees
     public BlackJack(){
         populateDeck();
     }
@@ -26,6 +26,19 @@ public class BlackJack {
         for (int[] arr : array){
             System.out.println(Arrays.toString(arr));
         }
+    }
+
+
+    public int getDealer_valueHidden() {
+        return dealer_valueHidden;
+    }
+
+    public int getDealer_valueTrue() {
+        return dealer_valueTrue;
+    }
+
+    public int getPlayer_value() {
+        return player_value;
     }
 }
 
