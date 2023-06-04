@@ -21,9 +21,10 @@ public class HelloApplication extends Application implements EventHandler<Action
     public static Stage window;
     Scene scene1, scene2, scene3;
     Button button, button2, hit, stand;
-    TextField input;
-    TextField player_hand;
-    TextField dealer_hand;
+    TextField input, balance;
+    TextField player_hand, dealer_hand, outcome;
+    int player_balance=100;
+    int bet=0;
     @Override
     public void start(Stage stage) throws IOException {
         window=stage;
@@ -41,6 +42,10 @@ public class HelloApplication extends Application implements EventHandler<Action
         button2.setOnAction(this);
 
         input = new TextField();
+        balance= new TextField();
+        balance.setText("Player balance: "+ player_balance);
+        balance.setEditable(false);
+        //label2.setText(""); ? needed
 
         VBox layout = new VBox();
         layout.setPadding(new Insets(5, 20, 20, 5));
@@ -52,13 +57,15 @@ public class HelloApplication extends Application implements EventHandler<Action
         window.show();
 
         VBox layout2 = new VBox();
-        layout2.getChildren().addAll(input,button2, label2);
+        layout2.getChildren().addAll(input,button2, label2,balance);
         scene2 = new Scene(layout2,320,240);
 
         player_hand= new TextField();
         player_hand.setEditable(false);
         dealer_hand= new TextField();
         dealer_hand.setEditable(false);
+        outcome = new TextField();
+        outcome.setEditable(false);
         hit = new Button();
         hit.setText("Hit");
         hit.setOnAction(this);
@@ -67,19 +74,31 @@ public class HelloApplication extends Application implements EventHandler<Action
         stand.setOnAction(this);
 
         VBox layout3= new VBox();
-        layout3.getChildren().addAll(dealer_hand,player_hand,hit,stand);
+        layout3.getChildren().addAll(dealer_hand,player_hand,hit,stand,outcome);
         scene3 = new Scene(layout3, 320, 240);
     }
     @Override
     public void handle(ActionEvent actionEvent) {
         if(actionEvent.getSource()==button){
-            //game1.runInstance();
-            //inp1=game1.getInp();
             window.setScene(scene2);
         }
         else if (actionEvent.getSource()==button2){
-            window.setScene(scene3);
+            try {
+                int nput = Integer.parseInt(input.getText());
+                if (nput<0){
+                    label2.setText("Bet is less than 0");
+                } else {
+                    bet = nput;
+                    window.setScene(scene3);
+                }
+            } catch (NumberFormatException e){
+                label2.setText("Bet is not a Number");
+            }
             //inp1.checkAnswer(input.getText());
+        } else if (actionEvent.getSource()==hit){
+
+        } else if (actionEvent.getSource()==stand){
+
         }
     }
     public static void main(String[] args) {
