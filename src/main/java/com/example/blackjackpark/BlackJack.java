@@ -6,8 +6,12 @@ import java.util.Queue;
 import java.util.Random;
 
 public class BlackJack {
+    Random rand = new Random();
     private int[][] deck= new int[4][13]; //clubs=0,diamonds=1,hearts=2,spades=3 columns;
     private Queue<Integer> playerQ = new LinkedList<>();
+    private Queue<Integer> dealerQ = new LinkedList<>();
+
+
     private int player_value=0;
     private int dealer_valueTrue=0;
     private int dealer_valueHidden=0; //what the player sees
@@ -32,23 +36,120 @@ public class BlackJack {
             System.out.println(Arrays.toString(arr));
         }
     }
-    public int draw(int amount){
-        if (amount_played==13){ //revise this later not going to work for allcases
-            populateDeck();
+
+    public void populateInitial(){
+        for(int i = 0; i < 2; i++){
+            playerQ.add(draw());
         }
-        Random rand = new Random();
-        if (amount>2){
-            return
+        for(int i = 0; i < 2; i++){
+            dealerQ.add(draw());
         }
-        if (amount<3){
-            int x=rand.nextInt(5);
-            int y=rand.nextInt(14);
-            if (deck[x][y]!=-1){
-                playerQ.add(deck[x][y]);
-                deck[x][y]=-1;
-            } else {
-                return draw(amount++);
+    }
+
+    public boolean isBust(Queue<Integer> q){
+        Object[] arr = q.toArray();
+        System.out.println(Arrays.toString(arr));
+        int sum = 0;
+        for(int i = 0; i < arr.length; i++){
+            sum =  sum + (int) arr[i];
+        }
+        if(sum > 21){
+            Queue<Integer> tempQ = new LinkedList<Integer>();
+            while(!q.isEmpty()){
+                if(q.peek() == 11){
+                    q.remove();
+                    tempQ.add(1);
+                }else {
+                    tempQ.add(q.remove());
+                }
             }
+            while (!tempQ.isEmpty()){
+                q.add(tempQ.remove());
+            }
+
+            sum = 0;
+            arr = q.toArray();
+            for(int i = 0; i < arr.length; i++){
+                sum =  sum + (int) arr[i];
+            }
+            if (sum > 21){
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
+
+    public boolean isBlackJack(Queue<Integer> q){
+        Object[] arr = q.toArray();
+        System.out.println(Arrays.toString(arr));
+        int sum = 0;
+        for(int i = 0; i < arr.length; i++){
+            sum =  sum + (int) arr[i];
+        }
+
+        if(sum == 21){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+//    public boolean isBlackJack()
+
+    public void hit(){
+        playerQ.add(draw());
+    }
+
+    public boolean dealerIsDone(){
+        Object[] arr = dealerQ.toArray();
+        System.out.println(Arrays.toString(arr));
+        int sum = 0;
+        for(int i = 0; i < arr.length; i++){
+            sum =  sum + (int) arr[i];
+        }
+
+        if(sum > 17){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public void dealerDraw(){
+        dealerQ.add(draw());
+    }
+
+    public int sum(Queue<Integer> q){
+        Object[] arr = q.toArray();
+        System.out.println(Arrays.toString(arr));
+        int sum = 0;
+        for(int i = 0; i < arr.length; i++){
+            sum =  sum + (int) arr[i];
+        }
+        return sum;
+    }
+
+    //Recursive Method
+    public int draw(){
+        int x=rand.nextInt(4);
+        int y=rand.nextInt(13);
+
+        //Base Case
+        if (deck[x][y]!=-1){
+            int temp = deck[x][y];
+            if(deck[x][y] == 1){
+                temp = 11;
+            }
+            deck[x][y]=-1;
+            return temp;
+        }
+        //Recursive Case
+        else{
+            return draw();
         }
     }
 
@@ -56,12 +157,14 @@ public class BlackJack {
         return dealer_valueHidden;
     }
 
-    public int getDealer_valueTrue() {
-        return dealer_valueTrue;
+    public Queue<Integer> getDealer_queue() {
+
+        return dealerQ;
     }
 
-    public int getPlayer_value() {
-        return player_value;
+    public Queue<Integer> getPlayer_queue() {
+
+        return playerQ;
     }
 }
 

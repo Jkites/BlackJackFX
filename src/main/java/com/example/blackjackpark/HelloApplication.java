@@ -13,6 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 public class HelloApplication extends Application implements EventHandler<ActionEvent> {
     public static Label label2 = new Label("");
@@ -89,18 +91,74 @@ public class HelloApplication extends Application implements EventHandler<Action
                     label2.setText("Bet is less than 0");
                 } else {
                     bet = nput;
+                    bj.populateInitial();
+
+                    Queue<Integer> playerQ = bj.getPlayer_queue();
+                    Queue<Integer> dealerQ = bj.getDealer_queue();
+                    player_hand.setText(playerQ.toString());
+                    dealer_hand.setText("[x], " + "[" + dealerQ.peek() + "]");
+                    System.out.println(playerQ.toString());
+
+                    if(bj.isBlackJack(bj.getPlayer_queue())){
+                        //ADD UI
+                        System.out.println("YOU WIN!");
+                    }
+                    if(bj.isBlackJack(bj.getDealer_queue())){
+                        dealer_hand.setText(bj.getDealer_queue().toString());
+                        //ADD UI
+                        System.out.println("YOU LOSE! Dealer Black Jack");
+                    }
+                    System.out.println(bj.isBust(playerQ));
+                    System.out.println(bj.isBlackJack(playerQ));
                     window.setScene(scene3);
+
                 }
             } catch (NumberFormatException e){
                 label2.setText("Bet is not a Number");
             }
+
             //inp1.checkAnswer(input.getText());
+
+
         } else if (actionEvent.getSource()==hit){
+            bj.hit();
+            player_hand.setText(bj.getPlayer_queue().toString());
+            if(bj.isBlackJack(bj.getPlayer_queue())){
+                //ADD UI
+                System.out.println("YOU WIN!");
+            }
+            if(bj.isBust(bj.getPlayer_queue())){
+                //ADD UI
+                System.out.println("You Lose.");
+            }
 
         } else if (actionEvent.getSource()==stand){
+            dealer_hand.setText(bj.getDealer_queue().toString());
+            while (!bj.dealerIsDone()){
+                bj.dealerDraw();
+                dealer_hand.setText(bj.getDealer_queue().toString());
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(bj.sum(bj.getPlayer_queue()) > bj.sum(bj.getDealer_queue())){
+                //ADD UI
+                System.out.println("YOU WIN!");
+            }
+            else{
+                //ADD UI
+                System.out.println("YOU LOSE");
+            }
+        }
+        else if (actionEvent.getSource()==hit)
+        {
 
         }
+
     }
+
     public static void main(String[] args) {
         launch();
     }
