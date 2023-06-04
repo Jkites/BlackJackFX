@@ -22,7 +22,7 @@ public class HelloApplication extends Application implements EventHandler<Action
 
     public static Stage window;
     Scene scene1, scene2, scene3;
-    Button button, button2, hit, stand;
+    Button button, button2, hit, stand, exit;
     TextField input, balance;
     TextField player_hand, dealer_hand, outcome;
     int player_balance=100;
@@ -74,9 +74,12 @@ public class HelloApplication extends Application implements EventHandler<Action
         stand = new Button();
         stand.setText("Stand");
         stand.setOnAction(this);
+        exit = new Button();
+        exit.setText("Back");
+        exit.setOnAction(this);
 
         VBox layout3= new VBox();
-        layout3.getChildren().addAll(dealer_hand,player_hand,hit,stand,outcome);
+        layout3.getChildren().addAll(dealer_hand,player_hand,hit,stand,outcome,exit);
         scene3 = new Scene(layout3, 320, 240);
     }
     @Override
@@ -91,8 +94,10 @@ public class HelloApplication extends Application implements EventHandler<Action
                     label2.setText("Bet is less than 0");
                 } else {
                     bet = nput;
+                    outcome.setText("");
                     bj.populateInitial();
-
+                    player_hand.setText("");
+                    dealer_hand.setText("");
                     Queue<Integer> playerQ = bj.getPlayer_queue();
                     Queue<Integer> dealerQ = bj.getDealer_queue();
                     player_hand.setText(playerQ.toString());
@@ -102,11 +107,17 @@ public class HelloApplication extends Application implements EventHandler<Action
                     if(bj.isBlackJack(bj.getPlayer_queue())){
                         //ADD UI
                         System.out.println("YOU WIN!");
+                        player_balance=player_balance+bet;
+                        outcome.setText("YOU WIN!");
+                        balance.setText("Player balance: "+ player_balance);
                     }
                     if(bj.isBlackJack(bj.getDealer_queue())){
                         dealer_hand.setText(bj.getDealer_queue().toString());
                         //ADD UI
                         System.out.println("YOU LOSE! Dealer Black Jack");
+                        player_balance=player_balance-bet;
+                        outcome.setText("YOU LOSE! Dealer Black Jack");
+                        balance.setText("Player balance: "+ player_balance);
                     }
                     System.out.println(bj.isBust(playerQ));
                     System.out.println(bj.isBlackJack(playerQ));
@@ -125,36 +136,50 @@ public class HelloApplication extends Application implements EventHandler<Action
             player_hand.setText(bj.getPlayer_queue().toString());
             if(bj.isBlackJack(bj.getPlayer_queue())){
                 //ADD UI
+                player_balance=player_balance+bet;
                 System.out.println("YOU WIN!");
+                outcome.setText("YOU WIN!");
+                balance.setText("Player balance: "+ player_balance);
             }
             if(bj.isBust(bj.getPlayer_queue())){
                 //ADD UI
+                player_balance=player_balance-bet;
                 System.out.println("You Lose.");
+                outcome.setText("YOU Lose.");
+                balance.setText("Player balance: "+ player_balance);
             }
 
         } else if (actionEvent.getSource()==stand){
             dealer_hand.setText(bj.getDealer_queue().toString());
             while (!bj.dealerIsDone()){
                 bj.dealerDraw();
+                System.out.println(bj.isBust(bj.getDealer_queue()));
                 dealer_hand.setText(bj.getDealer_queue().toString());
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                if (bj.isBust(bj.getDealer_queue())){
+                    player_balance=player_balance+bet;
+                    outcome.setText("YOU WIN!");
+                    balance.setText("Player balance: "+ player_balance);
                 }
             }
             if(bj.sum(bj.getPlayer_queue()) > bj.sum(bj.getDealer_queue())){
                 //ADD UI
+                player_balance=player_balance+bet;
                 System.out.println("YOU WIN!");
+                outcome.setText("YOU WIN!");
+                balance.setText("Player balance: "+ player_balance);
+            } else if (bj.sum(bj.getPlayer_queue())==bj.sum(bj.getDealer_queue())){
+                outcome.setText("Tie");
             }
-            else{
+            else if (bj.sum(bj.getDealer_queue()) > bj.sum(bj.getPlayer_queue())&&!bj.isBust(bj.getDealer_queue())){
                 //ADD UI
+                player_balance=player_balance-bet;
                 System.out.println("YOU LOSE");
-            }
-        }
-        else if (actionEvent.getSource()==hit)
-        {
+                outcome.setText("YOU LOSE");
 
+            }
+        } else if (actionEvent.getSource()==exit){
+            balance.setText("Player balance: "+ player_balance);
+            window.setScene(scene2);
         }
 
     }

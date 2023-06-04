@@ -29,6 +29,8 @@ public class BlackJack {
                 }
             }
         }
+
+
         printArray2d(deck);
     }
     public void printArray2d(int[][] array){
@@ -38,6 +40,11 @@ public class BlackJack {
     }
 
     public void populateInitial(){
+        while (!dealerQ.isEmpty()){
+            dealerQ.remove();
+        } while (!playerQ.isEmpty()){
+            playerQ.remove();
+        }
         for(int i = 0; i < 2; i++){
             playerQ.add(draw());
         }
@@ -47,6 +54,7 @@ public class BlackJack {
     }
 
     public boolean isBust(Queue<Integer> q){
+        System.out.println("is bust is called @!!");
         Object[] arr = q.toArray();
         System.out.println(Arrays.toString(arr));
         int sum = 0;
@@ -72,12 +80,13 @@ public class BlackJack {
             for(int i = 0; i < arr.length; i++){
                 sum =  sum + (int) arr[i];
             }
+            System.out.println(sum +"sum after >21");
             if (sum > 21){
                 return true;
             }
             return false;
         }
-
+        System.out.println(sum);
         return false;
     }
 
