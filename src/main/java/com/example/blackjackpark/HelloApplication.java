@@ -110,6 +110,8 @@ public class HelloApplication extends Application implements EventHandler<Action
                         player_balance=player_balance+bet;
                         outcome.setText("YOU WIN!");
                         balance.setText("Player balance: "+ player_balance);
+                        hit.setVisible(false);
+                        stand.setVisible(false);
                     }
                     if(bj.isBlackJack(bj.getDealer_queue())){
                         dealer_hand.setText(bj.getDealer_queue().toString());
@@ -118,6 +120,8 @@ public class HelloApplication extends Application implements EventHandler<Action
                         player_balance=player_balance-bet;
                         outcome.setText("YOU LOSE! Dealer Black Jack");
                         balance.setText("Player balance: "+ player_balance);
+                        hit.setVisible(false);
+                        stand.setVisible(false);
                     }
                     System.out.println(bj.isBust(playerQ));
                     System.out.println(bj.isBlackJack(playerQ));
@@ -140,6 +144,8 @@ public class HelloApplication extends Application implements EventHandler<Action
                 System.out.println("YOU WIN!");
                 outcome.setText("YOU WIN!");
                 balance.setText("Player balance: "+ player_balance);
+                hit.setVisible(false);
+                stand.setVisible(false);
             }
             if(bj.isBust(bj.getPlayer_queue())){
                 //ADD UI
@@ -147,6 +153,8 @@ public class HelloApplication extends Application implements EventHandler<Action
                 System.out.println("You Lose.");
                 outcome.setText("YOU Lose.");
                 balance.setText("Player balance: "+ player_balance);
+                hit.setVisible(false);
+                stand.setVisible(false);
             }
 
         } else if (actionEvent.getSource()==stand){
@@ -159,6 +167,8 @@ public class HelloApplication extends Application implements EventHandler<Action
                     player_balance=player_balance+bet;
                     outcome.setText("YOU WIN!");
                     balance.setText("Player balance: "+ player_balance);
+                    hit.setVisible(false);
+                    stand.setVisible(false);
                 }
             }
             if(bj.sum(bj.getPlayer_queue()) > bj.sum(bj.getDealer_queue())){
@@ -167,18 +177,26 @@ public class HelloApplication extends Application implements EventHandler<Action
                 System.out.println("YOU WIN!");
                 outcome.setText("YOU WIN!");
                 balance.setText("Player balance: "+ player_balance);
+                hit.setVisible(false);
+                stand.setVisible(false);
             } else if (bj.sum(bj.getPlayer_queue())==bj.sum(bj.getDealer_queue())){
                 outcome.setText("Tie");
+                hit.setVisible(false);
+                stand.setVisible(false);
             }
             else if (bj.sum(bj.getDealer_queue()) > bj.sum(bj.getPlayer_queue())&&!bj.isBust(bj.getDealer_queue())){
                 //ADD UI
                 player_balance=player_balance-bet;
                 System.out.println("YOU LOSE");
                 outcome.setText("YOU LOSE");
+                hit.setVisible(false);
+                stand.setVisible(false);
 
             }
         } else if (actionEvent.getSource()==exit){
             balance.setText("Player balance: "+ player_balance);
+            hit.setVisible(true);
+            stand.setVisible(true);
             window.setScene(scene2);
         }
 
