@@ -19,9 +19,11 @@ public class HelloApplication extends Application implements EventHandler<Action
     BlackJack bj = new BlackJack();
 
     public static Stage window;
-    Scene scene1, scene2;
-    Button button, button2;
+    Scene scene1, scene2, scene3;
+    Button button, button2, hit, stand;
     TextField input;
+    TextField player_hand;
+    TextField dealer_hand;
     @Override
     public void start(Stage stage) throws IOException {
         window=stage;
@@ -35,7 +37,7 @@ public class HelloApplication extends Application implements EventHandler<Action
         //button.setOnAction(e -> System.out.println("sdf")); alt way for newer java
 
         button2=new Button();
-        button2.setText("Check Answer");
+        button2.setText("Bet");
         button2.setOnAction(this);
 
         input = new TextField();
@@ -52,6 +54,21 @@ public class HelloApplication extends Application implements EventHandler<Action
         VBox layout2 = new VBox();
         layout2.getChildren().addAll(input,button2, label2);
         scene2 = new Scene(layout2,320,240);
+
+        player_hand= new TextField();
+        player_hand.setEditable(false);
+        dealer_hand= new TextField();
+        dealer_hand.setEditable(false);
+        hit = new Button();
+        hit.setText("Hit");
+        hit.setOnAction(this);
+        stand = new Button();
+        stand.setText("Stand");
+        stand.setOnAction(this);
+
+        VBox layout3= new VBox();
+        layout3.getChildren().addAll(dealer_hand,player_hand,hit,stand);
+        scene3 = new Scene(layout3, 320, 240);
     }
     @Override
     public void handle(ActionEvent actionEvent) {
@@ -61,7 +78,7 @@ public class HelloApplication extends Application implements EventHandler<Action
             window.setScene(scene2);
         }
         else if (actionEvent.getSource()==button2){
-
+            window.setScene(scene3);
             //inp1.checkAnswer(input.getText());
         }
     }
